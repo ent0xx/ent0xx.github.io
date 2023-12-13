@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Te amo</title>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Te amo" />
+    <meta name="keywords" content="Te amo" />
+    <meta name="author" content="Te amo" />
+    <meta property="og:type" content="site" />
+    <meta property="og:title" content="Te amo" />
+    <meta property="og:description" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="assets/icons/obnoxious.jpg" />
+    <meta itemprop="name" content="Te amo" />
+    <meta itemprop="description" content="Te amo" />
+    <meta itemprop="image" content="assets/icons/obnoxious.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link rel="shortcut icon" href="assets/icons/obnoxious.jpg" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="assets/stylesheets/stylesheet.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+
+		<style> 
+  
+  #countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .countdown-number {
+    font-size: 3em; /* Adjust the size of the numbers */
+    display: inline-block;
+    margin: 0;
+  }
+
+  .countdown-label {
+    font-size: 0.5em; /* Adjust the size of the labels */
+    display: block;
+    line-height: 1; /* Adjust line height to control space between number and label */
+    vertical-align: top; /* Align label to the top of the number */
+  }
+
+.heart {
+    position: absolute;
+    width: 40px; /* Size of the heart image */
+    cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s; /* Smooth transition for the transform property */
+  transform-origin: bottom; /* Pivot point set at the bottom of the heart */
+  }
+
+.heart:hover {
+    animation: bobbing 0.6s ease-in-out infinite;
+  }
+
+.heart:hover {
+    animation: bobbing 0.6s ease-in-out infinite;
+  }
+
+  @keyframes bobbing {
+    0%, 100% {
+      transform: rotate(-10deg);
+    }
+    50% {
+      transform: rotate(10deg);
+    }
+  } /* Chave de fechamento adicionada aqui */
+
+  .heart.large {
+    transform: scale(3) !important; /* Adicionado !important para garantir que esta transformação tenha prioridade */
+    animation: none; /* Interrompe a animação bobbing */
+    z-index: 1000; /* Garante que o coração ampliado fique acima dos outros */
+  }
+
+  .message-container {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001; /* Fica no topo */
+  }
+
+  .message-container img {
+    max-width: 100px;
+    max-height: 100px;
+  }
+
+  .message-container .message {
+    font-size: 24px;
+    color: #ff69b4;
+  }
+}
+#start-button {
+    position: fixed;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    z-index: 1001;
+    background-size: contain; /* Adiciona isso para garantir que a imagem se ajuste ao botão */
+    width: 100px; /* Defina uma largura para o botão */
+    height: 100px; /* Defina uma altura para o botão */
+    border: none;
+    cursor: pointer;
+}
+
+
+</style>
+  </head>
+
+  <body>
+
+<button id="start-button"></button>
+
+<div id="countdown">
+    </div>
+	<script>
+  // Função para mostrar corações flutuantes
+  function showHearts() {
+    const heart = document.createElement('img');
+    heart.src = 'assets/images/klipartz.com.png'; // Substitua pelo caminho para sua imagem de coração
+    heart.classList.add('heart');
+    heart.style.position = 'absolute';
+    heart.style.top = Math.random() * window.innerHeight + 'px';
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+
+    heart.onclick = function() {
+      this.classList.add('large'); // Aumenta o coração
+      const messageContainer = document.getElementById('message');
+      messageContainer.style.display = 'block'; // Mostra a mensagem
+      messageContainer.style.top = this.style.top;
+      messageContainer.style.left = this.style.left;
+    };
+
+    // Anexa o coração ao body
+    document.body.appendChild(heart);
+
+    // Remove o coração após 6 segundos, se não foi clicado
+    setTimeout(() => {
+      if (!heart.classList.contains('large')) {
+        heart.remove();
+      }
+    }, 6000);
+  }
+
+  // Chama a função showHearts a cada 2,5 segundos
+  setInterval(showHearts, 2500);
+
+  // Define a data para a contagem regressiva
+  let countDownDate = new Date('2024-01-14').getTime();
+
+  // Atualiza a contagem regressiva a cada segundo
+  let x = setInterval(function() {
+    let now = new Date().getTime();
+    let distance = countDownDate - now;
+
+    let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    let countdownHTML = `
+      <span class="countdown-number">${days}<span class="countdown-label">dias</span></span>
+      <span class="countdown-number">${hours}<span class="countdown-label">horas</span></span>
+      <span class="countdown-number">${minutes}<span class="countdown-label">minutos</span></span>
+      <span class="countdown-number">${seconds}<span class="countdown-label">segundos</span></span>
+    `;
+
+    document.getElementById("countdown").innerHTML = countdownHTML;
+
+    // Se a contagem regressiva terminar, escreve algum texto
+    if (distance < 0) {
+      clearInterval(x);
+      document.getElementById("countdown").innerHTML = "A gente finalmente vai estar junto <3";
+    }
+  }, 1000);
+
+// Variável de controle para o jogo de corações
+  let heartsInterval;
+
+  // Função para alternar o jogo de corações
+  function toggleHeartsGame() {
+    if (heartsInterval) {
+      clearInterval(heartsInterval);
+      heartsInterval = null;
+      // Remova todos os corações existentes
+      document.querySelectorAll('.heart').forEach(heart => heart.remove());
+    } else {
+      // Inicia o jogo
+      heartsInterval = setInterval(showHearts, 2500); // Ajuste o intervalo conforme desejado
+    }
+  }
+
+  // Evento de clique para o botão de início/parada
+  document.getElementById('start-button').onclick = toggleHeartsGame;
+</script>
+
+
+    <div id="main">
+      <table class="box">
+        <tbody>
+          <tr>
+            <td><span id="line1" style="white-space: pre;"></span></td>
+          </tr>
+          <tr>
+            <td><span id="line2" style="white-space: pre;"></span></td>
+          </tr>
+          <tr>
+            <td><span id="line3 space" style="white-space: pre;"></span></td>
+          </tr>
+          <tr>
+            <td><span id="line4" style="white-space: pre;"></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    
+
+    <div class="marquee-container" style="visibility: hidden;">
+      <pre>|<div id="marquee"></div>|</pre>
+    </div>
+
+    <div class="background" style="display: none;">
+      <div id="pattern"></div>
+    </div>
+
+    <div class="footer">
+      <i><a  target="_BLANK">My wife </a></i>
+    </div>
+
+    <script type="text/javascript" src="assets/javascript/lib/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="assets/javascript/lib/jquery.marquee.min.js"></script>
+    <script type="text/javascript" src="assets/javascript/lib/jquery.cookie.min.js"></script>
+    <script type="text/javascript" src="assets/javascript/lib/typed.min.js"></script>
+    <script type="text/javascript" src="assets/javascript/portfolio.js"></script>
+    <script type="text/javascript" src="assets/javascript/analytics.js"></script>
+  </body>
+</html>
