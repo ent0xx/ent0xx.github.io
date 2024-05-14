@@ -10,6 +10,7 @@
     <div class="container mt-4">
         <h2>Inventário de Equipamentos do IA-SAUDE</h2>
         <form id="equipForm" class="row g-3 mb-4">
+            <!-- Formulário para inserção de dados -->
             <div class="col-md-6">
                 <label for="modelo" class="form-label">Modelo</label>
                 <input type="text" class="form-control" id="modelo" required>
@@ -78,11 +79,7 @@
         function showOtherField() {
             const categoria = document.getElementById('categoria').value;
             const categoriaOutroDiv = document.getElementById('categoriaOutroDiv');
-            if (categoria === 'Outro') {
-                categoriaOutroDiv.style.display = 'block';
-            } else {
-                categoriaOutroDiv.style.display = 'none';
-            }
+            categoriaOutroDiv.style.display = categoria === 'Outro' ? 'block' : 'none';
         }
 
         function addRow() {
@@ -91,70 +88,79 @@
             const fields = ['modelo', 'serie', 'categoria', 'utilizador', 'localizacao'];
             fields.forEach(function(field) {
                 const cell = row.insertCell();
-                let value = document.getElementById(field).value.trim(); // Trim whitespace
-                if (field === 'categoria' && document.getElementById('categoria').value === 'Outro') {
+                let value = document.getElementById(field).value.trim();
+                if (field === 'categoria' && value === 'Outro') {
                     value = document.getElementById('categoriaOutro').value.trim();
-                               }
-                cell.textContent = value === '' ? 'S/R' : value; // Use 'S/R' if the field is empty
-                document.getElementById(field).value = ''; // Clear the form field after adding
+                }
+                cell.textContent = value || 'S/R'; // Usar 'S/R(sem resposta)' para valores não fornecidos
             });
-            document.getElementById('categoria').value = 'Escolher...'; // Reset dropdown
-            document.getElementById('categoriaOutro').style.display = 'none'; // Hide the 'Outro' input field
-            const deleteBtn = row.insertCell();
-            deleteBtn.innerHTML = '<button class="btn btn-danger btn-sm" onclick="deleteRow(this); saveTableData();">Eliminar</button>';
+
+            const deleteCell = row.insertCell();
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Remover';
+            deleteButton.className = 'btn btn-danger btn-sm';
+            deleteButton.onclick = function() {
+                row.remove();
+                saveTableData();
+            };
+            deleteCell.appendChild(deleteButton);
         }
 
-        function deleteRow(btn) {
-            const row = btn.parentNode.parentNode;
-            row.parentNode.removeChild(row);
-            saveTableData(); // Save the updated data to localStorage
+        function loadTableData() {
+            const data = JSON.parse(localStorage.getItem('equipData') || '[]');
+            data.forEach(function(equip) {
+                const row = document.getElementById('tableBody').insertRow();
+                equip.forEach(function(value, i) {
+                    const cell = row.insertCell();
+                    cell.textContent = value;
+                });
+                const deleteCell = row.insertCell();
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Remover';
+                deleteButton.className = 'btn btn-danger btn-sm';
+                deleteButton.onclick = function() {
+                    row.remove();
+                    saveTableData();
+                };
+                deleteCell.appendChild(deleteButton);
+            });
         }
 
         function saveTableData() {
             const table = document.getElementById('tableBody');
-            const rowsData = Array.from(table.rows).map(row => {
-                return Array.from(row.cells, cell => cell.textContent);
-            });
-            localStorage.setItem('tableData', JSON.stringify(rowsData));
-        }
-
-        function loadTableData() {
-            const data = JSON.parse(localStorage.getItem('tableData'));
-            if (data) {
-                const table = document.getElementById('tableBody');
-                data.forEach(rowData => {
-                    const row = table.insertRow();
-                    rowData.forEach(text => {
-                        const cell = row.insertCell();
-                        cell.textContent = text;
-                    });
-                    const deleteBtn = row.insertCell();
-                    deleteBtn.innerHTML = '<button class="btn btn-danger btn-sm" onclick="deleteRow(this); saveTableData();">Eliminar</button>';
-                });
+            const data = [];
+            for (let i = 0; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const rowData = [];
+                for (let j = 0; j < row.cells.length - 1; j++) {
+                    rowData.push(row.cells[j].textContent);
+                }
+                data.push(rowData);
             }
+            localStorage.setItem('equipData', JSON.stringify(data));
         }
 
         function exportTableToCSV(filename) {
             const csv = [];
-            const rows = document.querySelectorAll("table tr");
+            const rows = document.querySelectorAll('table tr');
+            
             for (let i = 0; i < rows.length; i++) {
-                const row = [], cols = rows[i].querySelectorAll("td, th");
-                for (let j = 0; j < cols.length; j++) {
-                    // Clean the data and escape double quotes
-                    const data = cols[j].innerText.replace(/"/g, '""');
-                    row.push('"' + data + '"');
-                }
-                csv.push(row.join(","));
+                const row = [], cols = rows[i].querySelectorAll('td, th');
+                
+                for (let j = 0; j < cols.length; j++) 
+                    row.push('"' + cols[j].innerText.replace(/"/g, '""') + '"');
+                
+                csv.push(row.join(','));
             }
-            // Create a link and download the CSV file
-            const link = document.createElement('a');
-            link.style.display = 'none';
-            link.setAttribute('target', '_blank');
-            link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv.join("\n")));
-            link.setAttribute('download', filename);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            
+            const csvFile = new Blob([csv.join('\n')], {type: 'text/csv'});
+            const downloadLink = document.createElement('a');
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = 'none';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
         }
     </script>
 </body>
