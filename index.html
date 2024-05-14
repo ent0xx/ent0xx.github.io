@@ -60,7 +60,7 @@
             <thead>
                 <tr>
                     <th>Modelo</th>
-                    <th>Nº Série</th>
+                    <th>N Serie</th>
                     <th>Categoria</th>
                     <th>Monitor</th>
                     <th>Rato</th>
@@ -69,8 +69,8 @@
                     <th>Torre</th>
                     <th>AP</th>
                     <th>Utilizador</th>
-                    <th>Localização</th>
-                    <th>Ações</th>
+                    <th>Localizacao</th>
+                    <th>Acoes</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
@@ -90,11 +90,12 @@
             const fields = ['modelo', 'serie', 'categoria', 'monitor', 'rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
             fields.forEach(function(field) {
                 const cell = row.insertCell();
+               ```javascript
+                let value = document.getElementById(field).value.trim(); // Trim whitespace
                 if (field === 'categoria' && document.getElementById('categoria').value === 'Outro') {
-                    cell.textContent = document.getElementById('categoriaOutro').value;
-                } else {
-                    cell.textContent = document.getElementById(field).value;
+                    value = document.getElementById('categoriaOutro').value.trim();
                 }
+                cell.textContent = value === '' ? 'S/R' : value; // Use 'S/R' if the field is empty
                 document.getElementById(field).value = ''; // Clear the form field after adding
             });
             document.getElementById('categoria').value = 'Escolher...'; // Reset dropdown
@@ -135,12 +136,13 @@
             var rows = document.querySelectorAll("table tr");
             for (var i = 0; i < rows.length; i++) {
                 var row = [], cols = rows[i].querySelectorAll("td, th");
-                for (var j = 0; j < cols.length; j++)
-            row.push('"' + cols[j].innerText + '"');
-            csv.push(row.join(";")); // Mudando de vírgula para ponto e vírgula
+                for (var j = 0; j < cols.length; j++) {
+                    row.push('"' + cols[j].innerText + '"'); // Wrap field in double quotes
+                }
+                csv.push(row.join(","));
+            }
+            downloadCSV(csv.join("\n"), filename);
         }
-        downloadCSV(csv.join("\n"), filename);
-    }
     </script>
 </body>
 </html>
