@@ -10,50 +10,64 @@
     <div class="container mt-4">
         <h2>Inventário de Equipamentos do IA-SAUDE</h2>
         <form id="equipForm" class="row g-3 mb-4">
-            <!-- Formulário para inserção de dados -->
-            <div class="col-md-6">
-                <label for="modelo" class="form-label">Modelo</label>
-                <input type="text" class="form-control" id="modelo" required>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="modelo" placeholder="Modelo" required>
             </div>
-            <div class="col-md-6">
-                <label for="serie" class="form-label">Número de Série</label>
-                <input type="text" class="form-control" id="serie" required>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="serie" placeholder="Nº serie" required>
             </div>
-            <div class="col-md-4">
-                <label for="categoria" class="form-label">Categoria</label>
-                <select id="categoria" class="form-select" onchange="showOtherField()">
+            <div class="col-md-2">
+                <select class="form-select" id="categoria" onchange="checkCategory()">
                     <option selected>Escolher...</option>
-                    <option value="Monitor">Monitor</option>
-                    <option value="Mouse">Mouse</option>
-                    <option value="Teclado">Teclado</option>
-                    <option value="Router">Router</option>
-                    <option value="Torre">Torre</option>
-                    <option value="AP">Access Point</option>
+                    <option value="Imagem">Imagem</option>
+                    <option value="Dispositivo Entrada">Dispositivo Entrada</option>
+                    <option value="Wireless">Wireless</option>
+                    <option value="Computador">Computador</option>
                     <option value="Outro">Outro</option>
                 </select>
+                <input type="text" class="form-control mt-2" id="categoriaOutro" placeholder="Digite a categoria" style="display: none;">
             </div>
-            <div class="col-md-4" id="categoriaOutroDiv" style="display:none;">
-                <label for="categoriaOutro" class="form-label">Especificar Categoria</label>
-                <input type="text" class="form-control" id="categoriaOutro">
+            <div class="col-md-1">
+                <input type="text" class="form-control" id="monitor" placeholder="Monitor">
             </div>
-            <div class="col-md-4">
-                <label for="utilizador" class="form-label">Utilizador</label>
-                <input type="text" class="form-control" id="utilizador">
+            <div class="col-md-1">
+                <input type="text" class="form-control" id="rato" placeholder="Rato">
             </div>
-            <div class="col-md-6">
-                <label for="localizacao" class="form-label">Localização</label>
-                <input type="text" class="form-control" id="localizacao">
+            <div class="col-md-1">
+                <input type="text" class="form-control" id="teclado" placeholder="Teclado">
             </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Adicionar ao Inventário</button>
+            <div class="col-md-1">
+                <input type="text" class="form-control" id="router" placeholder="Router">
+            </div>
+            <div class="col-md-1">
+                <input type="text" class="form-control" id="torre" placeholder="Torre">
+            </div>
+            <div class="col-md-1">
+                <input type="text" class="form-control" id="ap" placeholder="AP">
+            </div>
+            <div class="col-md-1">
+                <input type="text" class="form-control" id="utilizador" placeholder="Utilizador" required>
+            </div>
+            <div class="col-md-1">
+                <input type="text" class="form-control" id="localizacao" placeholder="Localização" required>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-success">Adicionar</button>
             </div>
         </form>
+
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Modelo</th>
-                    <th>Número de Série</th>
+                    <th>Nº Série</th>
                     <th>Categoria</th>
+                    <th>Monitor</th>
+                    <th>Rato</th>
+                    <th>Teclado</th>
+                    <th>Router</th>
+                    <th>Torre</th>
+                    <th>AP</th>
                     <th>Utilizador</th>
                     <th>Localização</th>
                     <th>Ações</th>
@@ -64,7 +78,8 @@
         </table>
         <button class="btn btn-primary" onclick="exportTableToCSV('inventario.csv')">Exportar para Excel</button>
     </div>
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             loadTableData();
@@ -72,58 +87,69 @@
 
         document.getElementById('equipForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            addRow();
-            saveTableData();
-        });
-
-        function showOtherField() {
-            const categoria = document.getElementById('categoria').value;
-            const categoriaOutroDiv = document.getElementById('categoriaOutroDiv');
-            categoriaOutroDiv.style.display = categoria === 'Outro' ? 'block' : 'none';
-        }
-
-        function addRow() {
             const table = document.getElementById('tableBody');
             const row = table.insertRow();
-            const fields = ['modelo', 'serie', 'categoria', 'utilizador', 'localizacao'];
-            fields.forEach(function(field) {
+            const fields = ['modelo', 'serie', 'categoria', 'monitor','rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
+            fields.forEach(field => {
                 const cell = row.insertCell();
-                let value = document.getElementById(field).value.trim();
+                let value = document.getElementById(field).value;
                 if (field === 'categoria' && value === 'Outro') {
-                    value = document.getElementById('categoriaOutro').value.trim();
+                    value = document.getElementById('categoriaOutro').value;
                 }
-                cell.textContent = value || 'S/R'; // Usar 'S/R(sem resposta)' para valores não fornecidos
+                cell.textContent = value;
             });
 
             const deleteCell = row.insertCell();
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Remover';
-            deleteButton.className = 'btn btn-danger btn-sm';
+            deleteButton.className = 'btn btn-danger';
             deleteButton.onclick = function() {
                 row.remove();
                 saveTableData();
             };
             deleteCell.appendChild(deleteButton);
+
+            saveTableData();
+            resetForm();
+        });
+
+        function checkCategory() {
+            const categoria = document.getElementById('categoria');
+            const categoriaOutro = document.getElementById('categoriaOutro');
+            if (categoria.value === 'Outro') {
+                categoriaOutro.style.display = 'block';
+            } else {
+                categoriaOutro.style.display = 'none';
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('equipForm').reset();
+            checkCategory(); // Hide 'categoriaOutro' if it was displayed
         }
 
         function loadTableData() {
-            const data = JSON.parse(localStorage.getItem('equipData') || '[]');
-            data.forEach(function(equip) {
-                const row = document.getElementById('tableBody').insertRow();
-                equip.forEach(function(value, i) {
-                    const cell = row.insertCell();
-                    cell.textContent = value;
+            const data = JSON.parse(localStorage.getItem('tableData'));
+            if (data) {
+                const table = document.getElementById('tableBody');
+                data.forEach(item => {
+                    const row = table.insertRow();
+                    item.forEach(value => {
+                        const cell = row.insertCell();
+                        cell.textContent = value;
+                    });
+
+                    const deleteCell = row.insertCell();
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Remover';
+                    deleteButton.className = 'btn btn-danger';
+                    deleteButton.onclick = function() {
+                        row.remove();
+                        saveTableData();
+                    };
+                    deleteCell.appendChild(deleteButton);
                 });
-                const deleteCell = row.insertCell();
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Remover';
-                deleteButton.className = 'btn btn-danger btn-sm';
-                deleteButton.onclick = function() {
-                    row.remove();
-                    saveTableData();
-                };
-                deleteCell.appendChild(deleteButton);
-            });
+            }
         }
 
         function saveTableData() {
@@ -132,35 +158,37 @@
             for (let i = 0; i < table.rows.length; i++) {
                 const row = table.rows[i];
                 const rowData = [];
-                for (let j = 0; j < row.cells.length - 1; j++) {
+                for (let j = 0; j < row.cells.length - 1; j++) { // Exclude the delete button cell
                     rowData.push(row.cells[j].textContent);
                 }
                 data.push(rowData);
             }
-            localStorage.setItem('equipData', JSON.stringify(data));
+            localStorage.setItem('tableData', JSON.stringify(data));
         }
 
         function exportTableToCSV(filename) {
             const csv = [];
-            const rows = document.querySelectorAll('table tr');
-            
+            const rows = document.querySelectorAll("table tr");
             for (let i = 0; i < rows.length; i++) {
-                const row = [], cols = rows[i].querySelectorAll('td, th');
-                
-                for (let j = 0; j < cols.length; j++) 
-                    row.push('"' + cols[j].innerText.replace(/"/g, '""') + '"');
-                
-                csv.push(row.join(','));
+                const row = [], cols = rows[i].querySelectorAll("td, th");
+                for (let j = 0; j < cols.length; j++) {
+                    // Clean the text in each cell
+                    const text = cols[j].innerText.replace(/"/g, '""');
+                    row.push('"' + text + '"');
+                }
+                csv.push(row.join(","));
             }
-            
-            const csvFile = new Blob([csv.join('\n')], {type: 'text/csv'});
-            const downloadLink = document.createElement('a');
+            downloadCSV(csv.join("\n"), filename);
+        }
+
+        function downloadCSV(csv, filename) {
+            const csvFile = new Blob([csv], {type: "text/csv"});
+            const downloadLink = document.createElement("a");
             downloadLink.download = filename;
             downloadLink.href = window.URL.createObjectURL(csvFile);
-            downloadLink.style.display = 'none';
+            downloadLink.style.display = "none";
             document.body.appendChild(downloadLink);
             downloadLink.click();
-            document.body.removeChild(downloadLink);
         }
     </script>
 </body>
