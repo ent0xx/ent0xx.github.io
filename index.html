@@ -17,7 +17,7 @@
                 <input type="text" class="form-control" id="serie" placeholder="Nº serie" required>
             </div>
             <div class="col-md-2">
-                <select class="form-select" id="categoria" onchange="toggleOtherInput()">>
+                <select class="form-select" id="categoria" onchange="checkCategory()">
                     <option selected>Escolher...</option>
                     <option value="Imagem">Imagem</option>
                     <option value="Dispositivo Entrada">Dispositivo Entrada</option>
@@ -25,10 +25,7 @@
                     <option value="Computador">Computador</option>
                     <option value="Outro">Outro</option>
                 </select>
-                <div class="mb-3 d-none" id="otherCategory">
-                <label for="otherInput" class="form-label">Especifique a Categoria:</label>
-                <input type="text" class="form-control" id="otherInput" placeholder="Digite a categoria">
-            </div>
+                <input type="text" class="form-control mt-2" id="categoriaOutro" placeholder="Digite a categoria" style="display: none;">
             </div>
             <div class="col-md-1">
                 <input type="text" class="form-control" id="monitor" placeholder="Monitor">
@@ -73,6 +70,7 @@
                     <th>AP</th>
                     <th>Utilizador</th>
                     <th>Localização</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
@@ -80,56 +78,98 @@
         </table>
         <button class="btn btn-primary" onclick="exportTableToCSV('inventario.csv')">Exportar para Excel</button>
     </div>
-    <script>
-        function toggleOtherInput() {
-            var selector = document.getElementById('categorySelect');
-            var otherInput = document.getElementById('otherCategory');
-            if (selector.value === "Other") {
-                otherInput.classList.remove('d-none');
-            } else {
-                otherInput.classList.add('d-none');
-            }
-        }
-    </script>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('equipForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const table = document.getElementById('tableBody');
-            const row = table.insertRow();
-            const fields = ['modelo', 'serie', 'categoria', 'monitor', 'rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
-            fields.forEach(function(field) {
-                const cell = row.insertCell();
-                cell.textContent = document.getElementById(field).value;
-                document.getElementById(field).value = ''; // Clear the form field after adding
-            });
-            document.getElementById('categoria').value = 'Escolher...'; // Reset dropdown
-        });
+    <script src="https```js
+// Função para verificar se o campo está vazio e substituir por "S/R"
+function checkEmpty(value) {
+    return value.trim() === "" ? "S/R" : value;
+}
 
-        function downloadCSV(csv, filename) {
-            let csvFile;
-            let downloadLink;
-            csvFile = new Blob([csv], {type: "text/csv"});
-            downloadLink = document.createElement("a");
-            downloadLink.download = filename;
-            downloadLink.href = window.URL.createObjectURL(csvFile);
-            downloadLink.style.display = "none";
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-        }
+// Função para adicionar as informações do formulário à tabela
+document.getElementById("equipForm").addEventListener("submit", function(event) {
+    event.preventDefault();
 
-        function exportTableToCSV(filename) {
-            var csv = [];
-            var rows = document.querySelectorAll("table tr");
-            for (var i = 0; i < rows.length; i++) {
-                var row = [], cols = rows[i].querySelectorAll("td, th");
-                for (var j = 0; j < cols.length; j++) 
-                    row.push('"' + cols[j].innerText + '"');
-                csv.push(row.join(","));
-            }
-            downloadCSV(csv.join("\n"), filename);
-        }
-    </script>
+    // Obter os valores inseridos
+    var modelo = document.getElementById("modelo").value;
+    var serie = document.getElementById("serie").value;
+    var categoria = document.getElementById("categoria").value;
+    var monitor = document.getElementById("monitor").value;
+    var rato = document.getElementById("rato").value;
+    var teclado = document.getElementById("teclado").value;
+    var router = document.getElementById("router").value;
+    var torre = document.getElementById("torre").value;
+    var ap = document.getElementById("ap").value;
+    var utilizador = document.getElementById("utilizador").value;
+    var localizacao = document.getElementById("localizacao").value;
+
+    // Verificar se os campos estão vazios e substituir por "S/R"
+    modelo = checkEmpty(modelo);
+    serie = checkEmpty(serie);
+    categoria = categoria === "Escolher..." ? "S/R" : categoria;
+    monitor = checkEmpty(monitor);
+    rato = checkEmpty(rato);
+    teclado = checkEmpty(teclado);
+    router = checkEmpty(router);
+    torre = checkEmpty(torre);
+    ap = checkEmpty(ap);
+    utilizador = checkEmpty(utilizador);
+    localizacao = checkEmpty(localizacao);
+
+    // Adicionar uma nova linha na tabela
+    var table = document.getElementById("tableBody");
+    var newRow = table.insertRow(-1);
+    newRow.innerHTML = `
+        <td>${modelo}</td>
+        <td>${serie}</td>
+        <td>${categoria}</td>
+        <td>${monitor}</td>
+        <td>${rato}</td>
+        <td>${teclado}</td>
+        <td>${router}</td>
+        <td>${torre}</td>
+        <td>${ap}</td>
+        <td>${utilizador}</td>
+        <td>${localizacao}</td>
+        <td><button onclick="removeRow(this)">Remover</button></td>
+    `;
+});
+
+// Função para remover uma linha da tabela
+function removeRow(button) {
+    var row = button.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+}
+
+// Função para exportar a tabela para CSV
+function exportTableToCSV(filename) {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+
+        for (var j = 0; j < cols.length; j++) 
+            row.push('"' + cols[j].innerText + '"');
+
+        csv.push(row.join(","));
+    }
+
+    downloadCSV(csv.join("\n"), filename);
+}
+
+// Função para baixar o arquivo CSV
+function downloadCSV(csv, filename) {
+    var csvFile;
+    var downloadLink;
+
+    csvFile = new Blob([csv], {type: "text/csv"});
+    downloadLink = document.createElement("a");
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+}
+</script>
 </body>
 </html>
