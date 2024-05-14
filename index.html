@@ -90,7 +90,6 @@
             const fields = ['modelo', 'serie', 'categoria', 'monitor', 'rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
             fields.forEach(function(field) {
                 const cell = row.insertCell();
-               ```javascript
                 let value = document.getElementById(field).value.trim(); // Trim whitespace
                 if (field === 'categoria' && document.getElementById('categoria').value === 'Outro') {
                     value = document.getElementById('categoriaOutro').value.trim();
