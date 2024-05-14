@@ -10,10 +10,54 @@
     <div class="container mt-4">
         <h2>Inventário de Equipamentos do IA-SAUDE</h2>
         <form id="equipForm" class="row g-3 mb-4">
-            <!-- Campos do formulário -->
+            <div class="col-md-6">
+                <label for="modelo" class="form-label">Modelo</label>
+                <input type="text" class="form-control" id="modelo" required>
+            </div>
+            <div class="col-md-6">
+                <label for="serie" class="form-label">Número de Série</label>
+                <input type="text" class="form-control" id="serie" required>
+            </div>
+            <div class="col-md-4">
+                <label for="categoria" class="form-label">Categoria</label>
+                <select id="categoria" class="form-select" onchange="showOtherField()">
+                    <option selected>Escolher...</option>
+                    <option value="Monitor">Monitor</option>
+                    <option value="Mouse">Mouse</option>
+                    <option value="Teclado">Teclado</option>
+                    <option value="Router">Router</option>
+                    <option value="Torre">Torre</option>
+                    <option value="AP">Access Point</option>
+                    <option value="Outro">Outro</option>
+                </select>
+            </div>
+            <div class="col-md-4" id="categoriaOutroDiv" style="display:none;">
+                <label for="categoriaOutro" class="form-label">Especificar Categoria</label>
+                <input type="text" class="form-control" id="categoriaOutro">
+            </div>
+            <div class="col-md-4">
+                <label for="utilizador" class="form-label">Utilizador</label>
+                <input type="text" class="form-control" id="utilizador">
+            </div>
+            <div class="col-md-6">
+                <label for="localizacao" class="form-label">Localização</label>
+                <input type="text" class="form-control" id="localizacao">
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Adicionar ao Inventário</button>
+            </div>
         </form>
         <table class="table table-bordered">
-            <!-- Cabeçalho da tabela -->
+            <thead>
+                <tr>
+                    <th>Modelo</th>
+                    <th>Número de Série</th>
+                    <th>Categoria</th>
+                    <th>Utilizador</th>
+                    <th>Localização</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
             <tbody id="tableBody">
             </tbody>
         </table>
@@ -31,16 +75,26 @@
             saveTableData();
         });
 
+        function showOtherField() {
+            const categoria = document.getElementById('categoria').value;
+            const categoriaOutroDiv = document.getElementById('categoriaOutroDiv');
+            if (categoria === 'Outro') {
+                categoriaOutroDiv.style.display = 'block';
+            } else {
+                categoriaOutroDiv.style.display = 'none';
+            }
+        }
+
         function addRow() {
             const table = document.getElementById('tableBody');
             const row = table.insertRow();
-            const fields = ['modelo', 'serie', 'categoria', 'monitor', 'rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
+            const fields = ['modelo', 'serie', 'categoria', 'utilizador', 'localizacao'];
             fields.forEach(function(field) {
                 const cell = row.insertCell();
                 let value = document.getElementById(field).value.trim(); // Trim whitespace
                 if (field === 'categoria' && document.getElementById('categoria').value === 'Outro') {
                     value = document.getElementById('categoriaOutro').value.trim();
-                }
+                               }
                 cell.textContent = value === '' ? 'S/R' : value; // Use 'S/R' if the field is empty
                 document.getElementById(field).value = ''; // Clear the form field after adding
             });
@@ -53,12 +107,13 @@
         function deleteRow(btn) {
             const row = btn.parentNode.parentNode;
             row.parentNode.removeChild(row);
+            saveTableData(); // Save the updated data to localStorage
         }
 
         function saveTableData() {
             const table = document.getElementById('tableBody');
             const rowsData = Array.from(table.rows).map(row => {
-                return Array.from(row.cells).map(cell => cell.textContent);
+                return Array.from(row.cells, cell => cell.textContent);
             });
             localStorage.setItem('tableData', JSON.stringify(rowsData));
         }
@@ -77,6 +132,29 @@
                     deleteBtn.innerHTML = '<button class="btn btn-danger btn-sm" onclick="deleteRow(this); saveTableData();">Eliminar</button>';
                 });
             }
+        }
+
+        function exportTableToCSV(filename) {
+            const csv = [];
+            const rows = document.querySelectorAll("table tr");
+            for (let i = 0; i < rows.length; i++) {
+                const row = [], cols = rows[i].querySelectorAll("td, th");
+                for (let j = 0; j < cols.length; j++) {
+                    // Clean the data and escape double quotes
+                    const data = cols[j].innerText.replace(/"/g, '""');
+                    row.push('"' + data + '"');
+                }
+                csv.push(row.join(","));
+            }
+            // Create a link and download the CSV file
+            const link = document.createElement('a');
+            link.style.display = 'none';
+            link.setAttribute('target', '_blank');
+            link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv.join("\n")));
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
