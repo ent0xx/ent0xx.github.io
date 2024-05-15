@@ -274,8 +274,7 @@
             const rows = document.querySelectorAll("table tr");
             for (let i = 0; i < rows.length; i++) {
                 const row = [], cols = rows[i].querySelectorAll("td, th");
-                for (let j = 0; j < cols.length; j++) {
-                    // delete em cada espaço da tabela
+                for (let j = 0; j < cols.length - 1; j++) { // Exclui o botão "Remover" da tabela.
                     const text = cols[j].innerText.replace(/"/g, '""');
                     row.push('"' + text + '"');
                 }
