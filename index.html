@@ -50,7 +50,21 @@
                 <input type="text" class="form-control" id="utilizador" placeholder="Utilizador">
             </div>
             <div class="col-md-1">
-                <input type="text" class="form-control" id="localizacao" placeholder="Localização" required>
+                <select class="form-select" id="localizacao" required onchange="checkLocation()">
+                    <option value="">Escolher...</option>
+                    <option value="Cave">Cave</option>
+                    <option value="Balcão de Apoio">Balcão de Apoio</option>
+                    <option value="Balcão de atendimento">Balcão de atendimento</option>
+                    <option value="Reembolsos">Reembolsos</option>
+                    <option value="1º Andar">1º Andar</option>
+                    <option value="2º Andar">2º Andar</option>
+                    <option value="3º Andar">3º Andar</option>
+                    <option value="4º Andar">4º Andar</option>
+                    <option value="5º Andar">5º Andar</option>
+                    <option value="6º Andar">6º Andar</option>
+                    <option value="Outro">Outro</option>
+                </select>
+                <input type="text" class="form-control mt-2" id="localizacaoOutro" placeholder="Digite a localização" style="display: none;">
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-success">Adicionar</button>
@@ -99,6 +113,9 @@
                 if (field === 'categoria' && value === 'Outro') {
                     value = document.getElementById('categoriaOutro').value;
                 }
+                if (field === 'localizacao' && value === 'Outro') {
+                    value = document.getElementById('localizacaoOutro').value;
+                }
                 // Adiciona um hífen se o valor estiver vazio
                 cell.textContent = value.trim() === '' ? '-' : value;
             });
@@ -117,8 +134,16 @@
             resetForm();
         });
 
-    
-
+        function checkLocation() {
+            const localizacao = document.getElementById('localizacao');
+            const localizacaoOutro = document.getElementById('localizacaoOutro');
+            if (localizacao.value === 'Outro') {
+                localizacaoOutro.style.display = 'block';
+            } else {
+                localizacaoOutro.style.display = 'none';
+            }
+        }
+            
         function checkCategory() {
             const categoria = document.getElementById('categoria');
             const categoriaOutro = document.getElementById('categoriaOutro');
@@ -131,7 +156,8 @@
 
         function resetForm() {
             document.getElementById('equipForm').reset();
-            checkCategory(); // Hide 'categoriaOutro' if it was displayed
+            checkCategory(); // se estava a aparecer, esconde
+            checkLocation(); //esta tambem
         }
 
         function loadTableData() {
