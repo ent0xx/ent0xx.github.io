@@ -22,17 +22,25 @@
             color: #333;
             margin-bottom: 20px;
         }
+        .table-responsive {
+            overflow-x: auto;  /* Enables horizontal scrolling */
+        }
         table {
+            width: 100%;
             background-color: #fff;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        th, td {
+            white-space: nowrap;  /* Prevents text wrapping */
+            text-align: left;
+            padding: 8px;
+            max-width: 200px;  /* Limits the maximum width of each column */
+            overflow: hidden;
+            text-overflow: ellipsis;  /* Adds ellipsis when text exceeds the max width */
         }
         th {
             background-color: #007bff;
             color: #fff;
-        }
-        th, td {
-            text-align: left;
-            padding: 8px;
         }
         input, select, .btn {
             min-height: 38px;
@@ -41,7 +49,7 @@
             cursor: pointer;
         }
         .btn-danger, .btn-primary {
-            margin-top: 10px;  /* Increased spacing for better accessibility */
+            margin-top: 10px;
         }
         #equipForm input, #equipForm select {
             margin-bottom: 10px;
