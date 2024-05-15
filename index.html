@@ -40,6 +40,7 @@
             max-width: 200px;
             overflow: hidden;
             text-overflow: ellipsis;
+            cursor: pointer; /* Indicates that the cell is interactive */
         }
         th {
             background-color: #007bff;
@@ -68,6 +69,10 @@
         }
         .action-buttons input {
             order: 2;
+        }
+        td:hover, td:focus {
+            overflow-x: auto; /* Allows scrolling within the cell on hover/focus */
+            outline: none; /* Removes focus outline for aesthetics */
         }
     </style>
     
@@ -177,7 +182,7 @@
             event.preventDefault();
             const table = document.getElementById('tableBody');
             const row = table.insertRow();
-            const fields = ['modelo', 'serie', 'categoria', 'monitor','rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
+            const fields = ['modelo', 'serie', 'categoria', 'monitor', 'rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
             fields.forEach(field => {
                 const cell = row.insertCell();
                 let value = document.getElementById(field).value;
@@ -187,8 +192,8 @@
                 if (field === 'localizacao' && value === 'Outro') {
                     value = document.getElementById('localizacaoOutro').value;
                 }
-                // Adiciona um hífen se o valor estiver vazio
                 cell.textContent = value.trim() === '' ? '-' : value;
+                cell.setAttribute('tabindex', '0'); // Make the cell focusable
             });
         
             const deleteCell = row.insertCell();
