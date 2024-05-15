@@ -258,14 +258,15 @@
             const rows = text.split('\n').map(row => row.split(','));
             const table = document.getElementById('tableBody');
             rows.forEach((row, index) => {
-                if (index === 0 && row[0].trim() === 'Modelo') {
+                if (index === 0 && row[0].trim() === '"Modelo"') { // Verifica se o cabeçalho está entre aspas
                     // Skip header row if it matches expected columns
                     return;
                 }
                 const newRow = table.insertRow();
                 row.forEach((value, colIndex) => {
+                    const cleanValue = value.replace(/"/g, '').trim(); // Remove aspas e espaços extras
                     const newCell = newRow.insertCell();
-                    newCell.textContent = value;
+                    newCell.textContent = cleanValue;
                 });
                 const deleteCell = newRow.insertCell();
                 const deleteButton = document.createElement('button');
