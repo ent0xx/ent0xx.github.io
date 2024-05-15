@@ -11,7 +11,7 @@
             background-color: #f4f4f4;
             font-family: Arial, sans-serif;
         }
-        .container, .content-section {
+        .container {
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
@@ -23,20 +23,23 @@
             margin-bottom: 20px;
         }
         .table-responsive {
-            overflow-x: auto;  /* Enables horizontal scrolling */
+            overflow-x: auto;  
+            margin: -20px; 
+            padding: 20px; 
         }
         table {
             width: 100%;
             background-color: #fff;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 0; 
         }
         th, td {
-            white-space: nowrap;  /* Prevents text wrapping */
+            white-space: nowrap;
             text-align: left;
             padding: 8px;
-            max-width: 200px;  /* Limits the maximum width of each column */
+            max-width: 200px;
             overflow: hidden;
-            text-overflow: ellipsis;  /* Adds ellipsis when text exceeds the max width */
+            text-overflow: ellipsis;
         }
         th {
             background-color: #007bff;
@@ -50,13 +53,6 @@
         }
         .btn-danger, .btn-primary {
             margin-top: 10px;
-        }
-        #equipForm input, #equipForm select {
-            margin-bottom: 10px;
-        }
-        .action-buttons {
-            display: flex;
-            justify-content: space-between;
         }
     </style>
     
@@ -125,27 +121,28 @@
                 <button type="submit" class="btn btn-success">Adicionar</button>
             </div>
         </form>
-
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Modelo</th>
-                    <th>Nº Série</th>
-                    <th>Categoria</th>
-                    <th>Monitor</th>
-                    <th>Rato</th>
-                    <th>Teclado</th>
-                    <th>Router</th>
-                    <th>Torre</th>
-                    <th>AP</th>
-                    <th>Utilizador</th>
-                    <th>Localização</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Modelo</th>
+                        <th>Nº Série</th>
+                        <th>Categoria</th>
+                        <th>Monitor</th>
+                        <th>Rato</th>
+                        <th>Teclado</th>
+                        <th>Router</th>
+                        <th>Torre</th>
+                        <th>AP</th>
+                        <th>Utilizador</th>
+                        <th>Localização</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
         <button class="btn btn-primary" onclick="exportTableToCSV('inventario.csv')">Exportar para Excel</button>
         <input type="file" class="form-control" id="csvFileInput" accept=".csv">
         <button class="btn btn-primary mt-2" onclick="importCSV()">Importar CSV</button>
