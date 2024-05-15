@@ -11,11 +11,12 @@
             background-color: #f4f4f4;
             font-family: Arial, sans-serif;
         }
-        .container {
+        .container, .content-section {
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
         h2 {
             color: #333;
@@ -33,17 +34,21 @@
             text-align: left;
             padding: 8px;
         }
-        input, select {
+        input, select, .btn {
             min-height: 38px;
         }
         button {
             cursor: pointer;
         }
-        .btn-danger {
-            margin-top: 4px;
+        .btn-danger, .btn-primary {
+            margin-top: 10px;  /* Increased spacing for better accessibility */
         }
         #equipForm input, #equipForm select {
             margin-bottom: 10px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
         }
     </style>
     
