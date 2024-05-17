@@ -163,6 +163,7 @@
             <input type="file" class="form-control" id="csvFileInput" accept=".csv">
             <button class="btn btn-primary" onclick="importCSV()">Importar CSV</button>
             <button class="btn btn-danger" onclick="confirmDeleteAll()">Remover Tudo</button>
+            <button class="btn btn-primary" onclick="sortTableByLocation()">Filtrar por Localização</button>
         </div>
     </div>
     
@@ -347,6 +348,23 @@
                 deleteCell.appendChild(deleteButton);
             });
             saveTableData();
+        }
+
+        function sortTableByLocation() {
+            const table = document.getElementById('tableBody');
+            let rows = Array.from(table.rows);
+        
+            // Ordena as linhas baseado na coluna de localização (índice 10)
+            rows.sort((a, b) => {
+                const locA = a.cells[10].textContent.toUpperCase(); // Localização na linha A
+                const locB = b.cells[10].textContent.toUpperCase(); // Localização na linha B
+                return locA.localeCompare(locB);
+            });
+        
+            // Anexa as linhas novamente na ordem correta
+            rows.forEach(row => table.appendChild(row));
+        
+            saveTableData(); // Salva os novos dados na localStorage
         }
     </script>
 </body>
