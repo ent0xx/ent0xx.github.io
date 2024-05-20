@@ -107,14 +107,14 @@
             <input type="text" class="form-control" id="torre" placeholder="Torre">
         </div>
         <div class="col-md-1">
-            <input type="text" class="form-control" id="```html
-ap" placeholder="AP">
+            <input type="text" class="form-control" id="ap" placeholder="AP">
         </div>
         <div class="col-md-1">
             <input type="text" class="form-control" id="utilizador" placeholder="Utilizador">
         </div>
         <div class="col-md-1">
-            <select class="form-select" id="localizacao" required onchange="checkLocation()">
+            <select class="form-select" id="```html
+localizacao" required onchange="checkLocation()">
                 <option value="">Localizacao...</option>
                 <option value="Cave">Cave</option>
                 <option value="Balcão de Apoio">Balcão de Apoio</option>
@@ -175,7 +175,7 @@ ap" placeholder="AP">
         event.preventDefault();
         const table = document.getElementById('tableBody');
         const row = table.insertRow();
-        const fields = ['modelo', 'serie', 'categoria', 'monitor','rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
+        const fields = ['modelo', 'serie', 'categoria', 'monitor', 'rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
         fields.forEach(field => {
             const cell = row.insertCell();
             let value = document.getElementById(field).value;
@@ -218,7 +218,7 @@ ap" placeholder="AP">
 
     function resetForm() {
         document.getElementById('equipForm').reset();
-        checkCategory(); // se estava a aparecer, esconde
+        checkCategory(); // se estava aaparecer, esconde
         checkLocation(); // esta também
     }
 
@@ -337,8 +337,10 @@ ap" placeholder="AP">
             const locB = b.cells[10].textContent.toUpperCase(); // Localização na linha B
             return locA.localeCompare(locB);
         });
-        .forEach(row => table.appendChild(row));
-    
+
+        // Anexa as linhas novamente na ordem correta
+        rows.forEach(row => table.appendChild(row));
+
         saveTableData(); // Salva os novos dados na localStorage
     }
 
