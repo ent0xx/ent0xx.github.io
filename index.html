@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventário de Equipamentos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
         body {
             background-color: #f4f4f4;
@@ -23,15 +22,15 @@
             margin-bottom: 20px;
         }
         .table-responsive {
-            overflow-x: auto;  
-            margin: -20px; 
-            padding: 20px; 
+            overflow-x: auto;
+            margin: -20px;
+            padding: 20px;
         }
         table {
             width: 100%;
             background-color: #fff;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 0; 
+            margin-bottom: 0;
         }
         th, td {
             white-space: nowrap;
@@ -54,318 +53,375 @@
         .btn-danger, .btn-primary {
             margin-top: 10px;
         }
-
         .action-buttons {
             display: flex;
-            flex-wrap: wrap; 
-            justify-content: start; 
-            gap: 10px; 
-            margin-top: 20px; 
+            flex-wrap: wrap;
+            justify-content: start;
+            gap: 10px;
+            margin-top: 20px;
         }
         .action-buttons button, .action-buttons input {
-            flex: 1 1 auto; 
-            min-width: 150px; 
+            flex: 1 1 auto;
+            min-width: 150px;
         }
         .action-buttons input {
             order: 2;
         }
     </style>
-    
 </head>
 <body>
-    <div class="container mt-4">
-        <h2>Inventário de Equipamentos do IA-SAUDE</h2>
-        <form id="equipForm" class="row g-3 mb-4">
-            <div class="col-md-2">
-                <input type="text" class="form-control" id="modelo" placeholder="Modelo" required>
-            </div>
-            <div class="col-md-2">
-                <input type="text" class="form-control" id="serie" placeholder="Nº serie" required>
-            </div>
-            <div class="col-md-2">
-                <select class="form-select" id="categoria" onchange="checkCategory()">
-                    <option selected>Tipo...</option>
-                    <option value="Imagem">Imagem</option>
-                    <option value="Dispositivo Entrada">Dispositivo Entrada</option>
-                    <option value="Wireless">Wireless</option>
-                    <option value="Computador">Computador</option>
-                    <option value="Scanner">Scanner</option>
-                    <option value="Outro">Outro</option>
-                </select>
-                <input type="text" class="form-control mt-2" id="categoriaOutro" placeholder="Digite a categoria" style="display: none;">
-            </div>
-            <div class="col-md-1">
-                <input type="text" class="form-control" id="monitor" placeholder="Monitor">
-            </div>
-            <div class="col-md-1">
-                <input type="text" class="form-control" id="rato" placeholder="Rato">
-            </div>
-            <div class="col-md-1">
-                <input type="text" class="form-control" id="teclado" placeholder="Teclado">
-            </div>
-            <div class="col-md-1">
-                <input type="text" class="form-control" id="router" placeholder="Router">
-            </div>
-            <div class="col-md-1">
-                <input type="text" class="form-control" id="torre" placeholder="Torre">
-            </div>
-            <div class="col-md-1">
-                <input type="text" class="form-control" id="ap" placeholder="AP">
-            </div>
-            <div class="col-md-1">
-                <input type="text" class="form-control" id="utilizador" placeholder="Utilizador">
-            </div>
-            <div class="col-md-1">
-                <select class="form-select" id="localizacao" required onchange="checkLocation()">
-                    <option value="">Localizacao...</option>
-                    <option value="Cave">Cave</option>
-                    <option value="Balcão de Apoio">Balcão de Apoio</option>
-                    <option value="Balcão de atendimento">Balcão de atendimento</option>
-                    <option value="Reembolsos">Reembolsos</option>
-                    <option value="1º Andar">1º Andar</option>
-                    <option value="2º Andar">2º Andar</option>
-                    <option value="3º Andar">3º Andar</option>
-                    <option value="4º Andar">4º Andar</option>
-                    <option value="5º Andar">5º Andar</option>
-                    <option value="6º Andar">6º Andar</option>
-                    <option value="Outro">Outro</option>
-                </select>
-                <input type="text" class="form-control mt-2" id="localizacaoOutro" placeholder="Digite a localização" style="display: none;">
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-success">Adicionar</button>
-            </div>
-        </form>
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Modelo</th>
-                        <th>Nº Série</th>
-                        <th>Categoria</th>
-                        <th>Monitor</th>
-                        <th>Rato</th>
-                        <th>Teclado</th>
-                        <th>Router</th>
-                        <th>Torre</th>
-                        <th>AP</th>
-                        <th>Utilizador</th>
-                        <th>Localização</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                </tbody>
-            </table>
+<div class="container mt-4">
+    <h2>Inventário de Equipamentos do IA-SAUDE</h2>
+    <form id="equipForm" class="row g-3 mb-4">
+        <div class="col-md-2">
+            <input type="text" class="form-control" id="modelo" placeholder="Modelo" required>
         </div>
-        <div class="action-buttons">
-            <button class="btn btn-primary" onclick="exportTableToCSV('inventario.csv')">Exportar para Excel</button>
-            <input type="file" class="form-control" id="csvFileInput" accept=".csv">
-            <button class="btn btn-primary" onclick="importCSV()">Importar CSV</button>
-            <button class="btn btn-danger" onclick="confirmDeleteAll()">Remover Tudo</button>
-            <button class="btn btn-primary" onclick="sortTableByLocation()">Filtrar por Localização</button>
+        <div class="col-md-2">
+            <input type="text" class="form-control" id="serie" placeholder="Nº serie" required>
         </div>
+        <div class="col-md-2">
+            <select class="form-select" id="categoria" onchange="checkCategory()">
+                <option selected>Tipo...</option>
+                <option value="Imagem">Imagem</option>
+                <option value="Dispositivo Entrada">Dispositivo Entrada</option>
+                <option value="Wireless">Wireless</option>
+                <option value="Computador">Computador</option>
+                <option value="Scanner">Scanner</option>
+                <option value="Outro">Outro</option>
+            </select>
+            <input type="text" class="form-control mt-2" id="categoriaOutro" placeholder="Digite a categoria" style="display: none;">
+        </div>
+        <div class="col-md-1">
+            <input type="text" class="form-control" id="monitor" placeholder="Monitor">
+        </div>
+        <div class="col-md-1">
+            <input type="text" class="form-control" id="rato" placeholder="Rato">
+        </div>
+        <div class="col-md-1">
+            <input type="text" class="form-control" id="teclado" placeholder="Teclado">
+        </div>
+        <div class="col-md-1">
+            <input type="text" class="form-control" id="router" placeholder="Router">
+        </div>
+        <div class="col-md-1">
+            <input type="text" class="form-control" id="torre" placeholder="Torre">
+        </div>
+        <div class="col-md-1">
+            <input type="text" class="form-control" id="```html
+ap" placeholder="AP">
+        </div>
+        <div class="col-md-1">
+            <input type="text" class="form-control" id="utilizador" placeholder="Utilizador">
+        </div>
+        <div class="col-md-1">
+            <select class="form-select" id="localizacao" required onchange="checkLocation()">
+                <option value="">Localizacao...</option>
+                <option value="Cave">Cave</option>
+                <option value="Balcão de Apoio">Balcão de Apoio</option>
+                <option value="Balcão de atendimento">Balcão de atendimento</option>
+                <option value="Reembolsos">Reembolsos</option>
+                <option value="1º Andar">1º Andar</option>
+                <option value="2º Andar">2º Andar</option>
+                <option value="3º Andar">3º Andar</option>
+                <option value="4º Andar">4º Andar</option>
+                <option value="5º Andar">5º Andar</option>
+                <option value="6º Andar">6º Andar</option>
+                <option value="Outro">Outro</option>
+            </select>
+            <input type="text" class="form-control mt-2" id="localizacaoOutro" placeholder="Digite a localização" style="display: none;">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-success">Adicionar</button>
+        </div>
+    </form>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Modelo</th>
+                    <th>Nº Série</th>
+                    <th>Categoria</th>
+                    <th>Monitor</th>
+                    <th>Rato</th>
+                    <th>Teclado</th>
+                    <th>Router</th>
+                    <th>Torre</th>
+                    <th>AP</th>
+                    <th>Utilizador</th>
+                    <th>Localização</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            loadTableData();
+    <div class="action-buttons">
+        <button class="btn btn-primary" onclick="exportTableToCSV('inventario.csv')">Exportar para Excel</button>
+        <input type="file" class="form-control" id="csvFileInput" accept=".csv">
+        <button class="btn btn-primary" onclick="importCSV()">Importar CSV</button>
+        <button class="btn btn-danger" onclick="confirmDeleteAll()">Remover Tudo</button>
+        <button class="btn btn-primary" onclick="sortTableByLocation()">Filtrar por Localização</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        loadTableData();
+    });
+
+    document.getElementById('equipForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const table = document.getElementById('tableBody');
+        const row = table.insertRow();
+        const fields = ['modelo', 'serie', 'categoria', 'monitor','rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
+        fields.forEach(field => {
+            const cell = row.insertCell();
+            let value = document.getElementById(field).value;
+            if (field === 'categoria' && value === 'Outro') {
+                value = document.getElementById('categoriaOutro').value;
+            }
+            if (field === 'localizacao' && value === 'Outro') {
+                value = document.getElementById('localizacaoOutro').value;
+            }
+            // Adiciona um hífen se o valor estiver vazio
+            cell.textContent = value.trim() === '' ? '-' : value;
         });
 
-        document.getElementById('equipForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-                const table = document.getElementById('tableBody');
+        const actionCell = row.insertCell();
+        addActionsToRow(actionCell, row);
+
+        saveTableData();
+        resetForm();
+    });
+
+    function checkLocation() {
+        const localizacao = document.getElementById('localizacao');
+        const localizacaoOutro = document.getElementById('localizacaoOutro');
+        if (localizacao.value === 'Outro') {
+            localizacaoOutro.style.display = 'block';
+        } else {
+            localizacaoOutro.style.display = 'none';
+        }
+    }
+
+    function checkCategory() {
+        const categoria = document.getElementById('categoria');
+        const categoriaOutro = document.getElementById('categoriaOutro');
+        if (categoria.value === 'Outro') {
+            categoriaOutro.style.display = 'block';
+        } else {
+            categoriaOutro.style.display = 'none';
+        }
+    }
+
+    function resetForm() {
+        document.getElementById('equipForm').reset();
+        checkCategory(); // se estava a aparecer, esconde
+        checkLocation(); // esta também
+    }
+
+    function loadTableData() {
+        const data = JSON.parse(localStorage.getItem('tableData'));
+        if (data) {
+            const table = document.getElementById('tableBody');
+            data.forEach(item => {
                 const row = table.insertRow();
-                const fields = ['modelo', 'serie', 'categoria', 'monitor','rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
-                fields.forEach(field => {
+                item.forEach(value => {
                     const cell = row.insertCell();
-                    let value = document.getElementById(field).value;
-                    if (field === 'categoria' && value === 'Outro') {
-                        value = document.getElementById('categoriaOutro').value;
-                    }
-                    if (field === 'localizacao' && value === 'Outro') {
-                        value = document.getElementById('localizacaoOutro').value;
-                    }
-                    // Adiciona um hífen se o valor estiver vazio
-                    cell.textContent = value.trim() === '' ? '-' : value;
+                    cell.textContent = value;
                 });
-            
-                const deleteCell = row.insertCell();
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Remover';
-                deleteButton.className = 'btn btn-danger';
-                deleteButton.onclick = function() {
-                    row.remove();
-                    saveTableData();
-                };
-                deleteCell.appendChild(deleteButton);
-            
-                saveTableData();
-                resetForm();
+
+                const actionCell = row.insertCell();
+                addActionsToRow(actionCell, row);
+            });
+        }
+    }
+
+    function saveTableData() {
+        const table = document.getElementById('tableBody');
+        const data = [];
+        for (let i = 0; i < table.rows.length; i++) {
+            const row = table.rows[i];
+            const rowData = [];
+            for (let j = 0; j < row.cells.length - 1; j++) { // ignora a célula de ações
+                rowData.push(row.cells[j].textContent);
+            }
+            data.push(rowData);
+        }
+        localStorage.setItem('tableData', JSON.stringify(data));
+    }
+
+    function exportTableToCSV(filename) {
+        const csv = [];
+        const rows = document.querySelectorAll("table tr");
+        for (let i = 0; i < rows.length; i++) {
+            const row = [], cols = rows[i].querySelectorAll("td, th");
+            for (let j = 0; j < cols.length - 1; j++) { // Exclui o botão "Remover" da tabela.
+                const text = cols[j].innerText.replace(/"/g, '""');
+                row.push('"' + text + '"');
+            }
+            csv.push(row.join(","));
+        }
+        downloadCSV(csv.join("\n"), filename);
+    }
+
+    function downloadCSV(csv, filename) {
+        const csvFile = new Blob([csv], {type: "text/csv"});
+        const downloadLink = document.createElement("a");
+        downloadLink.download = filename;
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+    }
+
+    function confirmDeleteAll() {
+        if (confirm("Tem certeza que deseja remover todos os dados da tabela?")) {
+            deleteAllData();
+        }
+    }
+
+    function deleteAllData() {
+        const table = document.getElementById('tableBody');
+        while (table.rows.length > 0) {
+            table.deleteRow(0);
+        }
+        localStorage.removeItem('tableData');
+    }
+
+    function importCSV() {
+        const fileInput = document.getElementById('csvFileInput');
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const text = event.target.result;
+                processCSV(text);
+            };
+            reader.readAsText(file);
+        } else {
+            alert('Por favor, selecione um arquivo CSV.');
+        }
+    }
+
+    function processCSV(text) {
+        const rows = text.split('\n').map(row => row.split(','));
+        const table = document.getElementById('tableBody');
+        rows.forEach((row, index) => {
+            if (index === 0 && row[0].trim() === '"Modelo"') { // verifica se tem aspas
+                // pula a linha de cabeçalho
+                return;
+            }
+            const newRow = table.insertRow();
+            row.forEach((value, colIndex) => {
+                const cleanValue = value.replace(/"/g, '').trim(); // remove as aspas
+                const newCell = newRow.insertCell();
+                newCell.textContent = cleanValue;
             });
 
-        function checkLocation() {
-            const localizacao = document.getElementById('localizacao');
-            const localizacaoOutro = document.getElementById('localizacaoOutro');
-            if (localizacao.value === 'Outro') {
-                localizacaoOutro.style.display = 'block';
-            } else {
-                localizacaoOutro.style.display = 'none';
-            }
-        }
-            
-        function checkCategory() {
-            const categoria = document.getElementById('categoria');
-            const categoriaOutro = document.getElementById('categoriaOutro');
-            if (categoria.value === 'Outro') {
-                categoriaOutro.style.display = 'block';
-            } else {
-                categoriaOutro.style.display = 'none';
-            }
-        }
+            const actionCell = newRow.insertCell();
+            addActionsToRow(actionCell, newRow);
+        });
+        saveTableData();
+    }
 
-        function resetForm() {
-            document.getElementById('equipForm').reset();
-            checkCategory(); // se estava a aparecer, esconde
-            checkLocation(); //esta tambem
-        }
+    function sortTableByLocation() {
+        const table = document.getElementById('tableBody');
+        let rows = Array.from(table.rows);
 
-        function loadTableData() {
-            const data = JSON.parse(localStorage.getItem('tableData'));
-            if (data) {
-                const table = document.getElementById('tableBody');
-                data.forEach(item => {
-                    const row = table.insertRow();
-                    item.forEach(value => {
-                        const cell = row.insertCell();
-                        cell.textContent = value;
-                    });
+        // Ordena as linhas baseado na coluna de localização (índice 10)
+        rows.sort((a, b) => {
+            const locA = a.cells[10].textContent.toUpperCase(); // Localização na linha A
+            const locB = b.cells[10].textContent.toUpperCase(); // Localização na linha B
+            return locA.localeCompare(locB);
+        });
+        .forEach(row => table.appendChild(row));
+    
+        saveTableData(); // Salva os novos dados na localStorage
+    }
 
-                    const deleteCell = row.insertCell();
-                    const deleteButton = document.createElement('button');
-                    deleteButton.textContent = 'Remover';
-                    deleteButton.className = 'btn btn-danger';
-                    deleteButton.onclick = function() {
-                        row.remove();
-                        saveTableData();
-                    };
-                    deleteCell.appendChild(deleteButton);
-                });
-            }
-        }
-
-        function saveTableData() {
-            const table = document.getElementById('tableBody');
-            const data = [];
-            for (let i = 0; i < table.rows.length; i++) {
-                const row = table.rows[i];
-                const rowData = [];
-                for (let j = 0; j < row.cells.length - 1; j++) { //nhé
-                    rowData.push(row.cells[j].textContent);
-                }
-                data.push(rowData);
-            }
-            localStorage.setItem('tableData', JSON.stringify(data));
-        }
-
-        function exportTableToCSV(filename) {
-            const csv = [];
-            const rows = document.querySelectorAll("table tr");
-            for (let i = 0; i < rows.length; i++) {
-                const row = [], cols = rows[i].querySelectorAll("td, th");
-                for (let j = 0; j < cols.length - 1; j++) { // Exclui o botão "Remover" da tabela.
-                    const text = cols[j].innerText.replace(/"/g, '""');
-                    row.push('"' + text + '"');
-                }
-                csv.push(row.join(","));
-            }
-            downloadCSV(csv.join("\n"), filename);
-        }
-
-        function downloadCSV(csv, filename) {
-            const csvFile = new Blob([csv], {type: "text/csv"});
-            const downloadLink = document.createElement("a");
-            downloadLink.download = filename;
-            downloadLink.href = window.URL.createObjectURL(csvFile);
-            downloadLink.style.display = "none";
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-        }
-
-        function confirmDeleteAll() {
-            if (confirm("Tem certeza que deseja remover todos os dados da tabela?")) {
-                deleteAllData();
-            }
-        }
-
-        function deleteAllData() {
-            const table = document.getElementById('tableBody');
-            while (table.rows.length > 0) {
-                table.deleteRow(0);
-            }
-            localStorage.removeItem('tableData');
-        }
-
-        function importCSV() {
-            const fileInput = document.getElementById('csvFileInput');
-            const file = fileInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const text = event.target.result;
-                    processCSV(text);
-                };
-                reader.readAsText(file);
-            } else {
-                alert('Por favor, selecione um arquivo CSV.');
-            }
-        }
-        
-        function processCSV(text) {
-            const rows = text.split('\n').map(row => row.split(','));
-            const table = document.getElementById('tableBody');
-            rows.forEach((row, index) => {
-                if (index === 0 && row[0].trim() === '"Modelo"') { // verifica se tem aspas
-                    // da skip
-                    return;
-                }
-                const newRow = table.insertRow();
-                row.forEach((value, colIndex) => {
-                    const cleanValue = value.replace(/"/g, '').trim(); // tira as aspas
-                    const newCell = newRow.insertCell();
-                    newCell.textContent = cleanValue;
-                });
-                const deleteCell = newRow.insertCell();
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Remover';
-                deleteButton.className = 'btn btn-danger';
-                deleteButton.onclick = function() {
-                    newRow.remove();
-                    saveTableData();
-                };
-                deleteCell.appendChild(deleteButton);
-            });
+    function addActionsToRow(actionCell, row) {
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Remover';
+        deleteButton.className = 'btn btn-danger me-2';
+        deleteButton.onclick = function() {
+            row.remove();
             saveTableData();
-        }
+        };
 
-        function sortTableByLocation() {
-            const table = document.getElementById('tableBody');
-            let rows = Array.from(table.rows);
-        
-            // Ordena as linhas baseado na coluna de localização (índice 10)
-            rows.sort((a, b) => {
-                const locA = a.cells[10].textContent.toUpperCase(); // Localização na linha A
-                const locB = b.cells[10].textContent.toUpperCase(); // Localização na linha B
-                return locA.localeCompare(locB);
-            });
-        
-            // Anexa as linhas novamente na ordem correta
-            rows.forEach(row => table.appendChild(row));
-        
-            saveTableData(); // Salva os novos dados na localStorage
-        }
-    </script>
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Editar';
+        editButton.className = 'btn btn-primary';
+        editButton.onclick = function() {
+            editRow(row);
+        };
+
+        actionCell.appendChild(deleteButton);
+        actionCell.appendChild(editButton);
+    }
+
+    function editRow(row) {
+        const fields = ['modelo', 'serie', 'categoria', 'monitor', 'rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
+        fields.forEach((field, index) => {
+            const cell = row.cells[index];
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'form-control';
+            input.value = cell.textContent;
+            cell.innerHTML = '';
+            cell.appendChild(input);
+        });
+
+        const actionCell = row.cells[row.cells.length - 1];
+        actionCell.innerHTML = '';
+
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Confirmar';
+        saveButton.className = 'btn btn-success me-2';
+        saveButton.onclick = function() {
+            saveRow(row);
+        };
+
+        const cancelButton = document.createElement('button');
+        cancelButton.textContent = 'Cancelar';
+        cancelButton.className = 'btn btn-secondary';
+        cancelButton.onclick = function() {
+            cancelEditRow(row);
+        };
+
+        actionCell.appendChild(saveButton);
+        actionCell.appendChild(cancelButton);
+    }
+
+    function saveRow(row) {
+        const fields = ['modelo', 'serie', 'categoria', 'monitor', 'rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
+        fields.forEach((field, index) => {
+            const cell = row.cells[index];
+            const input = cell.firstChild;
+            cell.textContent = input.value;
+        });
+
+        const actionCell = row.cells[row.cells.length - 1];
+        actionCell.innerHTML = '';
+        addActionsToRow(actionCell, row);
+
+        saveTableData();
+    }
+
+    function cancelEditRow(row) {
+        const fields = ['modelo', 'serie', 'categoria', 'monitor', 'rato', 'teclado', 'router', 'torre', 'ap', 'utilizador', 'localizacao'];
+        fields.forEach((field, index) => {
+            const cell = row.cells[index];
+            const originalValue = cell.firstChild.defaultValue;
+            cell.textContent = originalValue;
+        });
+
+        const actionCell = row.cells[row.cells.length - 1];
+        actionCell.innerHTML = '';
+        addActionsToRow(actionCell, row);
+    }
+</script>
 </body>
 </html>
