@@ -22,10 +22,9 @@
             margin-bottom: 20px;
         }
         .table-responsive {
-            overflow-x: auto;
-            margin: -20px;
-            padding: 20px;
-        }
+    max-height: 400px; /* Set a max height for the table container */
+    overflow-y: auto; /* Allow vertical scrolling */
+}
         table {
             width: 100%;
             background-color: #fff;
@@ -67,10 +66,14 @@
         .action-buttons input {
             order: 2;
         }
-        .header {
-             position:sticky;
-            top: 0 ;
-        }
+        thead th {
+    position: sticky;
+    top: 0; /* This makes the header stick to the top */
+    z-index: 1000; /* Ensures headers stay above the table content */
+    background-color: #007bff; /* Matches the background of the header */
+    color: #fff; /* Ensures text is visible */
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4); /* Adds a slight shadow for distinction */
+}
     </style>
 </head>
 <body>
