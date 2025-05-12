@@ -22,8 +22,8 @@
             margin-bottom: 20px;
         }
         .table-responsive {
-    max-height: 400px; /* Set a max height for the table container */
-    overflow-y: auto; /* Allow vertical scrolling */
+    max-height: 400px;
+    overflow-y: auto;
 }
         table {
             width: 100%;
@@ -67,11 +67,11 @@
         }
         thead th {
     position: sticky;
-    top: 0; /* This makes the header stick to the top */
-    z-index: 1000; /* Ensures headers stay above the table content */
-    background-color: #007bff; /* Matches the background of the header */
-    color: #fff; /* Ensures text is visible */
-    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4); /* Adds a slight shadow for distinction */
+    top: 0;
+    z-index: 1000; 
+    background-color: #007bff; 
+    color: #fff;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
 }
     </style>
 </head>
@@ -191,7 +191,7 @@ localizacao" required onchange="checkLocation()">
             if (field === 'localizacao' && value === 'Outro') {
                 value = document.getElementById('localizacaoOutro').value;
             }
-            // Adiciona um hífen se o valor estiver vazio
+            
             cell.textContent = value.trim() === '' ? '-' : value;
         });
 
@@ -264,7 +264,7 @@ localizacao" required onchange="checkLocation()">
         const rows = document.querySelectorAll("table tr");
         for (let i = 0; i < rows.length; i++) {
             const row = [], cols = rows[i].querySelectorAll("td, th");
-            for (let j = 0; j < cols.length - 1; j++) { // Exclui o botão "Remover" da tabela.
+            for (let j = 0; j < cols.length - 1; j++) {
                 const text = cols[j].innerText.replace(/"/g, '""');
                 row.push('"' + text + '"');
             }
